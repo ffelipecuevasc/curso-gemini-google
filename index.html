@@ -51,8 +51,6 @@
                         'card': '24px',
                     },
                     boxShadow: {
-                        'prompt-light': '0 2px 8px rgba(60, 64, 67, 0.10), 0 1px 2px rgba(60, 64, 67, 0.06)',
-                        'prompt-dark': '0 3px 12px rgba(0, 0, 0, 0.35)',
                         'card-light': '0 1px 4px rgba(60, 64, 67, 0.06)',
                         'card-dark': '0 2px 8px rgba(0, 0, 0, 0.25)',
                     }
@@ -321,95 +319,6 @@
             Descubre cómo la inteligencia multimodal y el ecosistema de Google redefinen la colaboración estratégica, la
             síntesis analítica y la eficiencia en organizaciones de alto desempeño.
         </p>
-
-        <!-- ========================================================
-             CÁPSULA EMBLEMÁTICA DE PROMPT (DIRECTO DE DESIGN.md)
-        ======================================================== -->
-        <div class="w-full max-w-[614px] mx-auto mb-10 relative">
-            <div class="h-[60px] w-full rounded-pill bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-prompt-light dark:shadow-prompt-dark flex items-center px-5 gap-3 transition-all duration-200 focus-within:shadow-md focus-within:ring-1 focus-within:ring-gemini-blue/30">
-
-                <!-- Botón "+" -->
-                <button id="prompt-add-btn" type="button" title="Adjuntar contexto o documento"
-                        class="w-7 h-7 flex items-center justify-center text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4v16m8-8H4"/>
-                    </svg>
-                </button>
-
-                <!-- Input Simulado Interactivo -->
-                <input
-                        id="prompt-input"
-                        type="text"
-                        placeholder="Pregunta a Gemini o escribe una tarea laboral..."
-                        class="flex-1 bg-transparent text-[15px] font-normal text-light-primary dark:text-dark-primary placeholder-light-secondary dark:placeholder-dark-secondary focus:outline-none"
-                        autocomplete="off"
-                />
-
-                <!-- Selector de Modelo con Menú Interactivo -->
-                <div class="relative">
-                    <button id="model-dropdown-btn" type="button"
-                            class="flex items-center gap-1 px-2.5 py-1 text-[13px] font-medium text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary rounded-pill hover:bg-black/[0.04] dark:hover:bg-white/[0.05] transition-all">
-                        <span id="current-model-label">Flash</span>
-                        <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-
-                    <!-- Menú Pop-up de Modelos -->
-                    <div id="model-dropdown-menu"
-                         class="hidden absolute right-0 bottom-12 w-48 bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border rounded-2xl shadow-xl py-1.5 z-30 text-left">
-                        <button data-model="Flash"
-                                class="model-opt w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-black/[0.04] dark:hover:bg-white/[0.05]">
-                            <span>Gemini Flash</span>
-                            <span class="text-[10px] text-gemini-green">Ultra rápido</span>
-                        </button>
-                        <button data-model="Pro"
-                                class="model-opt w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-black/[0.04] dark:hover:bg-white/[0.05]">
-                            <span>Gemini Pro</span>
-                            <span class="text-[10px] text-gemini-blue">Razonamiento</span>
-                        </button>
-                        <button data-model="Ultra"
-                                class="model-opt w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-black/[0.04] dark:hover:bg-white/[0.05]">
-                            <span>Gemini Ultra</span>
-                            <span class="text-[10px] text-gemini-red">Computación máx</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Ícono Micrófono -->
-                <button id="mic-btn" type="button" title="Activar entrada de voz"
-                        class="w-7 h-7 flex items-center justify-center text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Sugerencias Rápidas / Pills debajo del Prompt -->
-            <div class="flex flex-wrap items-center justify-center gap-2 mt-3 text-xs text-light-secondary dark:text-dark-secondary">
-                <span class="opacity-60 text-[11px]">Prueba:</span>
-                <button class="prompt-chip px-3 py-1 rounded-pill bg-light-surface/60 dark:bg-dark-surface/60 border border-light-border dark:border-dark-border hover:border-gemini-blue/40 transition-colors">
-                    Resumir hilo de correo en Gmail
-                </button>
-                <button class="prompt-chip px-3 py-1 rounded-pill bg-light-surface/60 dark:bg-dark-surface/60 border border-light-border dark:border-dark-border hover:border-gemini-blue/40 transition-colors">
-                    Crear Audio Overview en NotebookLM
-                </button>
-                <button class="prompt-chip px-3 py-1 rounded-pill bg-light-surface/60 dark:bg-dark-surface/60 border border-light-border dark:border-dark-border hover:border-gemini-blue/40 transition-colors">
-                    Comparar Flash vs Pro
-                </button>
-            </div>
-
-            <!-- Respuesta Dinámica Generada por Gemini en Vivo -->
-            <div id="prompt-response"
-                 class="hidden mt-4 text-left p-4 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-sm text-sm transition-all duration-300">
-                <div class="flex items-center gap-2 mb-2 text-xs font-medium text-gemini-blue">
-                    <span class="w-2 h-2 rounded-full bg-gemini-blue animate-ping"></span>
-                    Respuesta simulada con Gemini <span id="response-model-tag">Flash</span>:
-                </div>
-                <p id="response-text" class="text-light-primary dark:text-dark-primary font-normal leading-relaxed"></p>
-            </div>
-        </div>
 
         <!-- Llamado a la Acción (CTA) -->
         <div class="flex flex-wrap items-center justify-center gap-4">
@@ -1163,81 +1072,6 @@
         document.querySelectorAll('.mobile-nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
-            });
-        });
-
-        // 3. SELECTOR DE MODELO EN EL PROMPT (FLASH / PRO / ULTRA)
-        const modelDropdownBtn = document.getElementById('model-dropdown-btn');
-        const modelDropdownMenu = document.getElementById('model-dropdown-menu');
-        const currentModelLabel = document.getElementById('current-model-label');
-        const responseModelTag = document.getElementById('response-model-tag');
-
-        modelDropdownBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            modelDropdownMenu.classList.toggle('hidden');
-        });
-
-        document.querySelectorAll('.model-opt').forEach(opt => {
-            opt.addEventListener('click', (e) => {
-                const selectedModel = opt.getAttribute('data-model');
-                currentModelLabel.textContent = selectedModel;
-                responseModelTag.textContent = selectedModel;
-                modelDropdownMenu.classList.add('hidden');
-            });
-        });
-
-        document.addEventListener('click', () => {
-            modelDropdownMenu.classList.add('hidden');
-        });
-
-        // 4. INTERACCIÓN CON EL PROMPT Y SIMULACIÓN INTELIGENTE DE RESPUESTAS
-        const promptInput = document.getElementById('prompt-input');
-        const promptResponse = document.getElementById('prompt-response');
-        const responseText = document.getElementById('response-text');
-
-        const simulatedKnowledge = {
-            'gmail': 'En Gmail, utiliza prompts específicos como: "Sintetiza este hilo en 3 viñetas ejecutivas con próximos pasos y redacta un borrador cordial de agradecimiento confirmando la entrega del viernes".',
-            'audio': 'En NotebookLM, abre un cuaderno, añade al menos un documento de texto o PDF y en el panel "Guía del cuaderno" pulsa "Generar" bajo Audio Overview para obtener la conversación explicativa.',
-            'flash': 'Gemini Flash ofrece una latencia de milisegundos con ventana de contexto de hasta 1 millón de tokens, optimizado para alto volumen de peticiones y respuestas instantáneas.',
-            'default': 'Gemini se encuentra listo para asistirte en Google Docs, Sheets, Drive y Meet. Ingresa tus requerimientos para estructurar flujos laborales eficientes.'
-        };
-
-        function handlePromptQuery(query) {
-            if (!query.trim()) return;
-
-            promptResponse.classList.remove('hidden');
-            responseText.innerHTML = '<span class="opacity-50">Generando respuesta con el modelo...</span>';
-
-            setTimeout(() => {
-                const q = query.toLowerCase();
-                let reply = simulatedKnowledge.default;
-
-                if (q.includes('gmail') || q.includes('correo') || q.includes('resumir')) {
-                    reply = simulatedKnowledge.gmail;
-                } else if (q.includes('audio') || q.includes('notebooklm') || q.includes('podcast')) {
-                    reply = simulatedKnowledge.audio;
-                } else if (q.includes('flash') || q.includes('pro') || q.includes('diferencia') || q.includes('modelo')) {
-                    reply = simulatedKnowledge.flash;
-                } else {
-                    reply = `Procesando tarea "${query}": Se recomienda estructurar la instrucción dividiendo el objetivo, el contexto empresarial y el formato de salida esperado (tabla, viñetas o código).`;
-                }
-
-                responseText.textContent = reply;
-            }, 350);
-        }
-
-        promptInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                handlePromptQuery(promptInput.value);
-            }
-        });
-
-        // Chips de sugerencia rápida
-        document.querySelectorAll('.prompt-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const text = chip.textContent.trim();
-                promptInput.value = text;
-                handlePromptQuery(text);
             });
         });
 
