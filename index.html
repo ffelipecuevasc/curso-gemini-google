@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini y Google en el Entorno Laboral | Ecosistema & Recursos</title>
+
+    <!-- Tipografías de Google (Google Sans fallback con Outfit e Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Outfit:wght@400;500&display=swap"
+          rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Google Sans"', '"Google Sans Flex"', 'Outfit', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        gemini: {
+                            blue: '#3689FF',
+                            red: '#FA4340',
+                            yellow: '#F6C013',
+                            green: '#14BB69',
+                        },
+                        light: {
+                            bg: '#FAF9F9',
+                            surface: '#FFFFFF',
+                            primary: '#1F1F1F',
+                            secondary: '#5F6368',
+                            muted: '#80868B',
+                            border: 'rgba(60, 64, 67, 0.08)',
+                        },
+                        dark: {
+                            bg: '#0F0F0F',
+                            surface: '#1E1F20',
+                            surfaceHover: '#26272B',
+                            primary: '#E3E3E3',
+                            secondary: '#C4C7C5',
+                            muted: '#9AA0A6',
+                            border: 'rgba(255, 255, 255, 0.06)',
+                        }
+                    },
+                    borderRadius: {
+                        'pill': '9999px',
+                        'card': '24px',
+                    },
+                    boxShadow: {
+                        'prompt-light': '0 2px 8px rgba(60, 64, 67, 0.10), 0 1px 2px rgba(60, 64, 67, 0.06)',
+                        'prompt-dark': '0 3px 12px rgba(0, 0, 0, 0.35)',
+                        'card-light': '0 1px 4px rgba(60, 64, 67, 0.06)',
+                        'card-dark': '0 2px 8px rgba(0, 0, 0, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Configuración de fondo con iluminación ambiental atmosférica de DESIGN.md */
+        :root {
+            --bg-color: #FAF9F9;
+            --glow-1: rgba(183, 220, 252, 0.82);
+            --glow-2: rgba(205, 230, 251, 0.65);
+            --glow-3: rgba(229, 240, 249, 0.35);
+            --glow-transparent: rgba(250, 249, 249, 0);
+        }
+
+        .dark {
+            --bg-color: #0F0F0F;
+            --glow-1: rgba(30, 55, 125, 0.62);
+            --glow-2: rgba(25, 43, 94, 0.48);
+            --glow-3: rgba(17, 26, 56, 0.30);
+            --glow-transparent: rgba(15, 15, 15, 0);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            transition: background-color 300ms ease, color 300ms ease;
+        }
+
+        /* Brillo atmosférico suave detrás de la interfaz */
+        .ambient-lighting {
+            background: radial-gradient(
+                    ellipse 50% 45% at 50% 32%,
+                    var(--glow-1) 0%,
+                    var(--glow-2) 28%,
+                    var(--glow-3) 54%,
+                    var(--glow-transparent) 78%
+            );
+            animation: ambientPulse 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes ambientPulse {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 0.85;
+            }
+            100% {
+                transform: scale(1.05) translateY(-1.5%);
+                opacity: 1;
+            }
+        }
+
+        /* Scrollbar minimalista */
+        ::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.25);
+            border-radius: 9999px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+        }
+    </style>
+</head>
+
+<body class="text-light-primary dark:text-dark-primary font-sans antialiased selection:bg-gemini-blue/20 min-h-screen relative overflow-x-hidden">
+
+<!-- Fondo de iluminación espacial sutil -->
+<div class="fixed inset-0 pointer-events-none ambient-lighting z-0"></div>
+
+<!-- Contenedor de Alertas / Toast para Descargas -->
+<div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+<!-- ========================================================
+     1. HEADER / NAVEGACIÓN (STICKY & GLASSMORPHIC MINIMAL)
+======================================================== -->
+<header class="sticky top-0 z-40 backdrop-blur-md bg-light-bg/85 dark:bg-dark-bg/85 border-b border-light-border dark:border-dark-border transition-colors duration-300">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+
+        <!-- Extremo Izquierdo: Logo Gemini Mini + Nombre -->
+        <a href="#inicio" class="flex items-center gap-3 group focus:outline-none">
+            <div class="w-7 h-7 flex-shrink-0 transition-transform duration-200 group-hover:scale-105">
+                <!-- Mini Gemini SVG -->
+                <svg viewBox="0 0 296 298" class="w-full h-full" fill="none">
+                    <mask id="nav-a" width="296" height="298" x="0" y="0" maskUnits="userSpaceOnUse"
+                          style="mask-type:alpha">
+                        <path fill="#3186FF"
+                              d="M141.201 4.886c2.282-6.17 11.042-6.071 13.184.148l5.985 17.37a184.004 184.004 0 0 0 111.257 113.049l19.304 6.997c6.143 2.227 6.156 10.91.02 13.155l-19.35 7.082a184.001 184.001 0 0 0-109.495 109.385l-7.573 20.629c-2.241 6.105-10.869 6.121-13.133.025l-7.908-21.296a184 184 0 0 0-109.02-108.658l-19.698-7.239c-6.102-2.243-6.118-10.867-.025-13.132l20.083-7.467A183.998 183.998 0 0 0 133.291 26.28l7.91-21.394Z"/>
+                    </mask>
+                    <g mask="url(#nav-a)">
+                        <ellipse cx="163" cy="149" fill="#3689FF" rx="196" ry="159"/>
+                        <ellipse cx="33.5" cy="142.5" fill="#F6C013" rx="68.5" ry="72.5"/>
+                        <path fill="#FA4340" d="M194 10.5C172 82.5 65.5 134.333 22.5 135L144-66l50 76.5Z"/>
+                        <path fill="#14BB69" d="M194.5 279.5C172.5 207.5 66 155.667 23 155l121.5 201 50-76.5Z"/>
+                    </g>
+                </svg>
+            </div>
+            <span class="text-[15px] font-medium tracking-tight text-light-primary dark:text-dark-primary">
+          Gemini <span class="text-light-secondary dark:text-dark-secondary font-normal">&amp; Google Suite</span>
+        </span>
+        </a>
+
+        <!-- Centro: Enlaces de Navegación Fluidos (Escritorio) -->
+        <nav class="hidden md:flex items-center gap-1 bg-light-surface/70 dark:bg-dark-surface/60 border border-light-border dark:border-dark-border px-2 py-1 rounded-pill">
+            <a href="#inicio"
+               class="px-3.5 py-1.5 text-[14px] text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary rounded-pill hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-all">Inicio</a>
+            <a href="#ecosistema"
+               class="px-3.5 py-1.5 text-[14px] text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary rounded-pill hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-all">Ecosistema</a>
+            <a href="#gemini-modelos"
+               class="px-3.5 py-1.5 text-[14px] text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary rounded-pill hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-all">Modelos</a>
+            <a href="#notebooklm"
+               class="px-3.5 py-1.5 text-[14px] text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary rounded-pill hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-all">NotebookLM</a>
+            <a href="#instructor"
+               class="px-3.5 py-1.5 text-[14px] text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary rounded-pill hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-all">Instructor</a>
+        </nav>
+
+        <!-- Extremo Derecho: Botón Toggle Modo Claro / Oscuro -->
+        <div class="flex items-center gap-2">
+            <button id="theme-toggle" type="button" aria-label="Cambiar tema de color"
+                    class="w-10 h-10 rounded-pill flex items-center justify-center border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary transition-all hover:scale-105 active:scale-95">
+                <!-- Sol (Visible en Dark) -->
+                <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                          d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+                <!-- Luna (Visible en Light) -->
+                <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                </svg>
+            </button>
+
+            <!-- Botón Menú Móvil -->
+            <button id="mobile-menu-btn"
+                    class="md:hidden w-10 h-10 rounded-pill flex items-center justify-center border border-light-border dark:border-dark-border text-light-secondary dark:text-dark-secondary"
+                    aria-label="Abrir menú">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Menú Desplegable Móvil -->
+    <div id="mobile-menu"
+         class="hidden md:hidden px-6 py-4 bg-light-surface dark:bg-dark-surface border-b border-light-border dark:border-dark-border flex flex-col gap-2">
+        <a href="#inicio"
+           class="mobile-nav-link py-2 text-sm text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary">Inicio</a>
+        <a href="#ecosistema"
+           class="mobile-nav-link py-2 text-sm text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary">Ecosistema</a>
+        <a href="#gemini-modelos"
+           class="mobile-nav-link py-2 text-sm text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary">Modelos
+            Gemini</a>
+        <a href="#notebooklm"
+           class="mobile-nav-link py-2 text-sm text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary">NotebookLM</a>
+        <a href="#instructor"
+           class="mobile-nav-link py-2 text-sm text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary">Instructor
+            Felipe Cuevas</a>
+    </div>
+</header>
+
+<main class="relative z-10">
+
+    <!-- ========================================================
+         2. SECCIÓN PRINCIPAL (HERO SECTION - GEMINI UI PHILOSOPHY)
+    ======================================================== -->
+    <section id="inicio"
+             class="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-6 pt-12 pb-20 text-center">
+
+        <!-- Logo Principal Oficial SVG de Gemini -->
+        <div class="mb-8 relative group">
+            <svg viewBox="0 0 296 298" xmlns="http://www.w3.org/2000/svg"
+                 class="w-44 h-44 md:w-56 md:h-56 mx-auto drop-shadow-2xl transition-transform duration-700 hover:scale-[1.03]"
+                 fill="none">
+                <mask id="a" width="296" height="298" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+                    <path fill="#3186FF"
+                          d="M141.201 4.886c2.282-6.17 11.042-6.071 13.184.148l5.985 17.37a184.004 184.004 0 0 0 111.257 113.049l19.304 6.997c6.143 2.227 6.156 10.91.02 13.155l-19.35 7.082a184.001 184.001 0 0 0-109.495 109.385l-7.573 20.629c-2.241 6.105-10.869 6.121-13.133.025l-7.908-21.296a184 184 0 0 0-109.02-108.658l-19.698-7.239c-6.102-2.243-6.118-10.867-.025-13.132l20.083-7.467A183.998 183.998 0 0 0 133.291 26.28l7.91-21.394Z"/>
+                </mask>
+                <g mask="url(#a)">
+                    <g filter="url(#b)">
+                        <ellipse cx="163" cy="149" fill="#3689FF" rx="196" ry="159"/>
+                    </g>
+                    <g filter="url(#c)">
+                        <ellipse cx="33.5" cy="142.5" fill="#F6C013" rx="68.5" ry="72.5"/>
+                    </g>
+                    <g filter="url(#d)">
+                        <ellipse cx="19.5" cy="148.5" fill="#F6C013" rx="68.5" ry="72.5"/>
+                    </g>
+                    <g filter="url(#e)">
+                        <path fill="#FA4340" d="M194 10.5C172 82.5 65.5 134.333 22.5 135L144-66l50 76.5Z"/>
+                    </g>
+                    <g filter="url(#f)">
+                        <path fill="#FA4340" d="M190.5-12.5C168.5 59.5 62 111.333 19 112L140.5-89l50 76.5Z"/>
+                    </g>
+                    <g filter="url(#g)">
+                        <path fill="#14BB69" d="M194.5 279.5C172.5 207.5 66 155.667 23 155l121.5 201 50-76.5Z"/>
+                    </g>
+                    <g filter="url(#h)">
+                        <path fill="#14BB69" d="M196.5 320.5C174.5 248.5 68 196.667 25 196l121.5 201 50-76.5Z"/>
+                    </g>
+                </g>
+                <defs>
+                    <filter id="b" width="464" height="390" x="-69" y="-46" color-interpolation-filters="sRGB"
+                            filterUnits="userSpaceOnUse">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur result="effect1_foregroundBlur_69_17998" stdDeviation="18"/>
+                    </filter>
+                    <filter id="c" width="265" height="273" x="-99" y="6" color-interpolation-filters="sRGB"
+                            filterUnits="userSpaceOnUse">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur result="effect1_foregroundBlur_69_17998" stdDeviation="32"/>
+                    </filter>
+                    <filter id="d" width="265" height="273" x="-113" y="12" color-interpolation-filters="sRGB"
+                            filterUnits="userSpaceOnUse">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur result="effect1_foregroundBlur_69_17998" stdDeviation="32"/>
+                    </filter>
+                    <filter id="e" width="299.5" height="329" x="-41.5" y="-130" color-interpolation-filters="sRGB"
+                            filterUnits="userSpaceOnUse">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur result="effect1_foregroundBlur_69_17998" stdDeviation="32"/>
+                    </filter>
+                    <filter id="f" width="299.5" height="329" x="-45" y="-153" color-interpolation-filters="sRGB"
+                            filterUnits="userSpaceOnUse">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur result="effect1_foregroundBlur_69_17998" stdDeviation="32"/>
+                    </filter>
+                    <filter id="g" width="299.5" height="329" x="-41" y="91" color-interpolation-filters="sRGB"
+                            filterUnits="userSpaceOnUse">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur result="effect1_foregroundBlur_69_17998" stdDeviation="32"/>
+                    </filter>
+                    <filter id="h" width="299.5" height="329" x="-39" y="132" color-interpolation-filters="sRGB"
+                            filterUnits="userSpaceOnUse">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur result="effect1_foregroundBlur_69_17998" stdDeviation="32"/>
+                    </filter>
+                </defs>
+            </svg>
+        </div>
+
+        <!-- Título Principal (Google Sans / 34px-40px / Font 400 segun DESIGN.md) -->
+        <h1 class="text-3xl sm:text-4xl md:text-[38px] font-normal leading-tight tracking-[-0.02em] max-w-2xl mx-auto mb-4 text-light-primary dark:text-dark-primary">
+            Gemini y Google en el <span
+                class="bg-gradient-to-r from-gemini-blue via-[#8AB4F8] to-gemini-red bg-clip-text text-transparent">entorno laboral</span>
+        </h1>
+
+        <!-- Subtítulo Atractivo sobre Transformación y Productividad -->
+        <p class="text-base sm:text-lg font-normal text-light-secondary dark:text-dark-secondary max-w-xl mx-auto mb-10 leading-relaxed">
+            Descubre cómo la inteligencia multimodal y el ecosistema de Google redefinen la colaboración estratégica, la
+            síntesis analítica y la eficiencia en organizaciones de alto desempeño.
+        </p>
+
+        <!-- ========================================================
+             CÁPSULA EMBLEMÁTICA DE PROMPT (DIRECTO DE DESIGN.md)
+        ======================================================== -->
+        <div class="w-full max-w-[614px] mx-auto mb-10 relative">
+            <div class="h-[60px] w-full rounded-pill bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-prompt-light dark:shadow-prompt-dark flex items-center px-5 gap-3 transition-all duration-200 focus-within:shadow-md focus-within:ring-1 focus-within:ring-gemini-blue/30">
+
+                <!-- Botón "+" -->
+                <button id="prompt-add-btn" type="button" title="Adjuntar contexto o documento"
+                        class="w-7 h-7 flex items-center justify-center text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4v16m8-8H4"/>
+                    </svg>
+                </button>
+
+                <!-- Input Simulado Interactivo -->
+                <input
+                        id="prompt-input"
+                        type="text"
+                        placeholder="Pregunta a Gemini o escribe una tarea laboral..."
+                        class="flex-1 bg-transparent text-[15px] font-normal text-light-primary dark:text-dark-primary placeholder-light-secondary dark:placeholder-dark-secondary focus:outline-none"
+                        autocomplete="off"
+                />
+
+                <!-- Selector de Modelo con Menú Interactivo -->
+                <div class="relative">
+                    <button id="model-dropdown-btn" type="button"
+                            class="flex items-center gap-1 px-2.5 py-1 text-[13px] font-medium text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary rounded-pill hover:bg-black/[0.04] dark:hover:bg-white/[0.05] transition-all">
+                        <span id="current-model-label">Flash</span>
+                        <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <!-- Menú Pop-up de Modelos -->
+                    <div id="model-dropdown-menu"
+                         class="hidden absolute right-0 bottom-12 w-48 bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border rounded-2xl shadow-xl py-1.5 z-30 text-left">
+                        <button data-model="Flash"
+                                class="model-opt w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-black/[0.04] dark:hover:bg-white/[0.05]">
+                            <span>Gemini Flash</span>
+                            <span class="text-[10px] text-gemini-green">Ultra rápido</span>
+                        </button>
+                        <button data-model="Pro"
+                                class="model-opt w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-black/[0.04] dark:hover:bg-white/[0.05]">
+                            <span>Gemini Pro</span>
+                            <span class="text-[10px] text-gemini-blue">Razonamiento</span>
+                        </button>
+                        <button data-model="Ultra"
+                                class="model-opt w-full px-4 py-2 text-xs flex items-center justify-between hover:bg-black/[0.04] dark:hover:bg-white/[0.05]">
+                            <span>Gemini Ultra</span>
+                            <span class="text-[10px] text-gemini-red">Computación máx</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ícono Micrófono -->
+                <button id="mic-btn" type="button" title="Activar entrada de voz"
+                        class="w-7 h-7 flex items-center justify-center text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Sugerencias Rápidas / Pills debajo del Prompt -->
+            <div class="flex flex-wrap items-center justify-center gap-2 mt-3 text-xs text-light-secondary dark:text-dark-secondary">
+                <span class="opacity-60 text-[11px]">Prueba:</span>
+                <button class="prompt-chip px-3 py-1 rounded-pill bg-light-surface/60 dark:bg-dark-surface/60 border border-light-border dark:border-dark-border hover:border-gemini-blue/40 transition-colors">
+                    Resumir hilo de correo en Gmail
+                </button>
+                <button class="prompt-chip px-3 py-1 rounded-pill bg-light-surface/60 dark:bg-dark-surface/60 border border-light-border dark:border-dark-border hover:border-gemini-blue/40 transition-colors">
+                    Crear Audio Overview en NotebookLM
+                </button>
+                <button class="prompt-chip px-3 py-1 rounded-pill bg-light-surface/60 dark:bg-dark-surface/60 border border-light-border dark:border-dark-border hover:border-gemini-blue/40 transition-colors">
+                    Comparar Flash vs Pro
+                </button>
+            </div>
+
+            <!-- Respuesta Dinámica Generada por Gemini en Vivo -->
+            <div id="prompt-response"
+                 class="hidden mt-4 text-left p-4 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-sm text-sm transition-all duration-300">
+                <div class="flex items-center gap-2 mb-2 text-xs font-medium text-gemini-blue">
+                    <span class="w-2 h-2 rounded-full bg-gemini-blue animate-ping"></span>
+                    Respuesta simulada con Gemini <span id="response-model-tag">Flash</span>:
+                </div>
+                <p id="response-text" class="text-light-primary dark:text-dark-primary font-normal leading-relaxed"></p>
+            </div>
+        </div>
+
+        <!-- Llamado a la Acción (CTA) -->
+        <div class="flex flex-wrap items-center justify-center gap-4">
+            <a href="#ecosistema"
+               class="px-7 py-3 rounded-pill bg-light-primary text-light-surface dark:bg-dark-primary dark:text-dark-bg font-medium text-sm hover:opacity-90 active:scale-95 transition-all shadow-sm">
+                Explorar Recursos y Guías
+            </a>
+            <a href="#gemini-modelos"
+               class="px-7 py-3 rounded-pill bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border text-light-primary dark:text-dark-primary font-medium text-sm hover:bg-black/[0.02] dark:hover:bg-white/[0.04] active:scale-95 transition-all">
+                Comparar Modelos IA
+            </a>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         3. FRANJA HORIZONTAL DE MARCAS / LOGOS
+    ======================================================== -->
+    <section
+            class="border-y border-light-border dark:border-dark-border bg-light-surface/40 dark:bg-dark-surface/40 backdrop-blur-sm py-8 px-6">
+        <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-around gap-8 md:gap-12">
+
+            <!-- Logo 1: Gemini Oficial -->
+            <div class="flex items-center gap-3 opacity-80 hover:opacity-100 transition-opacity">
+                <div class="w-8 h-8">
+                    <svg viewBox="0 0 296 298" class="w-full h-full" fill="none">
+                        <mask id="bar-a" width="296" height="298" x="0" y="0" maskUnits="userSpaceOnUse"
+                              style="mask-type:alpha">
+                            <path fill="#3186FF"
+                                  d="M141.201 4.886c2.282-6.17 11.042-6.071 13.184.148l5.985 17.37a184.004 184.004 0 0 0 111.257 113.049l19.304 6.997c6.143 2.227 6.156 10.91.02 13.155l-19.35 7.082a184.001 184.001 0 0 0-109.495 109.385l-7.573 20.629c-2.241 6.105-10.869 6.121-13.133.025l-7.908-21.296a184 184 0 0 0-109.02-108.658l-19.698-7.239c-6.102-2.243-6.118-10.867-.025-13.132l20.083-7.467A183.998 183.998 0 0 0 133.291 26.28l7.91-21.394Z"/>
+                        </mask>
+                        <g mask="url(#bar-a)">
+                            <ellipse cx="163" cy="149" fill="#3689FF" rx="196" ry="159"/>
+                            <ellipse cx="33.5" cy="142.5" fill="#F6C013" rx="68.5" ry="72.5"/>
+                            <path fill="#FA4340" d="M194 10.5C172 82.5 65.5 134.333 22.5 135L144-66l50 76.5Z"/>
+                            <path fill="#14BB69" d="M194.5 279.5C172.5 207.5 66 155.667 23 155l121.5 201 50-76.5Z"/>
+                        </g>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium tracking-wide">Google Gemini</span>
+            </div>
+
+            <!-- Logo 2: NotebookLM Oficial Exacto -->
+            <div class="flex items-center gap-3 opacity-80 hover:opacity-100 transition-opacity">
+                <svg class="w-8 h-8 fill-current text-light-primary dark:text-dark-primary" role="img"
+                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <title>NotebookLM</title>
+                    <path d="M11.999 3.201C5.372 3.201 0 8.528 0 15.101V20.8h2.212v-.568c0-2.666 2.178-4.827 4.866-4.827 2.688 0 4.866 2.16 4.866 4.827v.568h2.212v-.568c0-3.877-3.17-7.019-7.078-7.019A7.075 7.075 0 0 0 2.992 14.5a7.355 7.355 0 0 1 6.568-4.016c4.057 0 7.347 3.264 7.347 7.287V20.8h2.212V17.77c0-5.235-4.28-9.481-9.56-9.481a9.563 9.563 0 0 0-6.217 2.28A9.795 9.795 0 0 1 12 5.393c5.406 0 9.788 4.346 9.788 9.707V20.8H24V15.1c-.001-6.573-5.373-11.9-12.001-11.9Z"/>
+                </svg>
+                <span class="text-sm font-medium tracking-wide">NotebookLM</span>
+            </div>
+
+            <!-- Logo 3: Google Oficial Multicolor -->
+            <div class="flex items-center gap-3 opacity-80 hover:opacity-100 transition-opacity">
+                <svg class="w-7 h-7" viewBox="0 0 24 24">
+                    <path fill="#4285F4"
+                          d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853"
+                          d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05"
+                          d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335"
+                          d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span class="text-sm font-medium tracking-wide">Google Workspace</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========================================================
+         4. SECCIÓN: ECOSISTEMA DE GOOGLE EN EL TRABAJO
+    ======================================================== -->
+    <section id="ecosistema" class="py-24 px-6 max-w-5xl mx-auto">
+
+        <!-- Encabezado con Ícono Google G -->
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-sm mb-4">
+                <svg class="w-8 h-8" viewBox="0 0 24 24">
+                    <path fill="#4285F4"
+                          d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853"
+                          d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05"
+                          d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335"
+                          d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-normal tracking-tight text-light-primary dark:text-dark-primary mb-3">
+                Ecosistema de Google en el Trabajo
+            </h2>
+            <p class="text-sm sm:text-base text-light-secondary dark:text-dark-secondary font-normal leading-relaxed">
+                La inteligencia de Gemini se entrelaza de forma nativa en cada aplicación corporativa de Google. Desde
+                redactar respuestas en Gmail y estructurar informes en Docs, hasta analizar datos en Sheets y sintetizar
+                reuniones en Meet sin fricciones.
+            </p>
+        </div>
+
+        <!-- Grid de Aplicaciones Destacadas -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+
+            <!-- Tarjeta Gmail & Docs -->
+            <div class="p-6 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card-light dark:shadow-card-dark transition-transform hover:-translate-y-1">
+                <div class="w-10 h-10 rounded-pill bg-[#FA4340]/10 text-gemini-red flex items-center justify-center font-medium text-xs mb-4">
+                    GM/DC
+                </div>
+                <h3 class="text-base font-medium mb-2 text-light-primary dark:text-dark-primary">Gmail &amp; Google
+                    Docs</h3>
+                <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed">
+                    Generación instantánea de borradores contextuales, síntesis de hilos extensos de correo y
+                    reescritura con tono corporativo formal o sintético.
+                </p>
+            </div>
+
+            <!-- Tarjeta Sheets & Drive -->
+            <div class="p-6 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card-light dark:shadow-card-dark transition-transform hover:-translate-y-1">
+                <div class="w-10 h-10 rounded-pill bg-[#14BB69]/10 text-gemini-green flex items-center justify-center font-medium text-xs mb-4">
+                    SH/DR
+                </div>
+                <h3 class="text-base font-medium mb-2 text-light-primary dark:text-dark-primary">Google Sheets &amp;
+                    Drive</h3>
+                <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed">
+                    Clasificación automática de texto, formulación avanzada en lenguaje natural y búsqueda semántica de
+                    documentos en repositorios corporativos.
+                </p>
+            </div>
+
+            <!-- Tarjeta Google Meet -->
+            <div class="p-6 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card-light dark:shadow-card-dark transition-transform hover:-translate-y-1">
+                <div class="w-10 h-10 rounded-pill bg-[#3689FF]/10 text-gemini-blue flex items-center justify-center font-medium text-xs mb-4">
+                    MEET
+                </div>
+                <h3 class="text-base font-medium mb-2 text-light-primary dark:text-dark-primary">Google Meet &amp;
+                    Colaboración</h3>
+                <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed">
+                    Toma de notas automatizada en tiempo real, extracción de elementos de acción (action items) y
+                    subtitulado traducido multilingüe instantáneo.
+                </p>
+            </div>
+        </div>
+
+        <!-- Subtítulo de Recursos Descargables -->
+        <div class="border-t border-light-border dark:border-dark-border pt-12">
+            <h3 class="text-lg font-medium text-center text-light-primary dark:text-dark-primary mb-8">
+                Recursos y Guías Técnicas Descargables (PDF)
+            </h3>
+
+            <!-- Grid de Recursos PDF -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <!-- Recurso 1 -->
+                <div class="p-5 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border flex items-center justify-between gap-4 group">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-gemini-red/10 text-gemini-red flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-light-primary dark:text-dark-primary group-hover:text-gemini-blue transition-colors">
+                                Guía de Automatización en Google Workspace.pdf
+                            </h4>
+                            <div class="flex items-center gap-2 mt-0.5 text-xs text-light-secondary dark:text-dark-secondary">
+                                <span>Documento Oficial</span>
+                                <span>•</span>
+                                <span class="px-1.5 py-0.5 rounded bg-black/[0.04] dark:bg-white/[0.06] text-[11px]">2.4 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="triggerDownload('Guia-de-Automatizacion-en-Google-Workspace.pdf', '2.4 MB')"
+                            class="px-3.5 py-2 rounded-pill bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-xs font-medium hover:border-gemini-blue text-light-primary dark:text-dark-primary flex items-center gap-1.5 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Descargar</span>
+                    </button>
+                </div>
+
+                <!-- Recurso 2 -->
+                <div class="p-5 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border flex items-center justify-between gap-4 group">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-gemini-red/10 text-gemini-red flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-light-primary dark:text-dark-primary group-hover:text-gemini-blue transition-colors">
+                                Manual de Prompts para Gmail y Docs.pdf
+                            </h4>
+                            <div class="flex items-center gap-2 mt-0.5 text-xs text-light-secondary dark:text-dark-secondary">
+                                <span>Plantillas Listas</span>
+                                <span>•</span>
+                                <span class="px-1.5 py-0.5 rounded bg-black/[0.04] dark:bg-white/[0.06] text-[11px]">1.8 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="triggerDownload('Manual-de-Prompts-para-Gmail-y-Docs.pdf', '1.8 MB')"
+                            class="px-3.5 py-2 rounded-pill bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-xs font-medium hover:border-gemini-blue text-light-primary dark:text-dark-primary flex items-center gap-1.5 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Descargar</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ========================================================
+         5. SECCIÓN: FAMILIA DE MODELOS DE GEMINI
+    ======================================================== -->
+    <section id="gemini-modelos"
+             class="py-24 px-6 border-t border-light-border dark:border-dark-border max-w-5xl mx-auto">
+
+        <!-- Encabezado con SVG de Gemini -->
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <div class="w-10 h-10 mx-auto mb-4">
+                <svg viewBox="0 0 296 298" class="w-full h-full" fill="none">
+                    <mask id="model-section-a" width="296" height="298" x="0" y="0" maskUnits="userSpaceOnUse"
+                          style="mask-type:alpha">
+                        <path fill="#3186FF"
+                              d="M141.201 4.886c2.282-6.17 11.042-6.071 13.184.148l5.985 17.37a184.004 184.004 0 0 0 111.257 113.049l19.304 6.997c6.143 2.227 6.156 10.91.02 13.155l-19.35 7.082a184.001 184.001 0 0 0-109.495 109.385l-7.573 20.629c-2.241 6.105-10.869 6.121-13.133.025l-7.908-21.296a184 184 0 0 0-109.02-108.658l-19.698-7.239c-6.102-2.243-6.118-10.867-.025-13.132l20.083-7.467A183.998 183.998 0 0 0 133.291 26.28l7.91-21.394Z"/>
+                    </mask>
+                    <g mask="url(#model-section-a)">
+                        <ellipse cx="163" cy="149" fill="#3689FF" rx="196" ry="159"/>
+                        <ellipse cx="33.5" cy="142.5" fill="#F6C013" rx="68.5" ry="72.5"/>
+                        <path fill="#FA4340" d="M194 10.5C172 82.5 65.5 134.333 22.5 135L144-66l50 76.5Z"/>
+                        <path fill="#14BB69" d="M194.5 279.5C172.5 207.5 66 155.667 23 155l121.5 201 50-76.5Z"/>
+                    </g>
+                </svg>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-normal tracking-tight text-light-primary dark:text-dark-primary mb-3">
+                Familia de Modelos de Gemini
+            </h2>
+            <p class="text-sm sm:text-base text-light-secondary dark:text-dark-secondary font-normal leading-relaxed">
+                Diseñados desde cero para ser multimodalmente nativos: procesan texto, audio, código, video de alta
+                resolución e imágenes con una arquitectura optimizada para cada escala de trabajo.
+            </p>
+        </div>
+
+        <!-- Tarjetas Comparativas de los 3 Modelos Clave -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+
+            <!-- Modelo 1: Flash / Flash-Lite -->
+            <div class="p-6 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card-light dark:shadow-card-dark flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-pill text-[11px] font-medium bg-gemini-green/10 text-gemini-green">
+                Baja Latencia
+              </span>
+                        <span class="text-xs text-light-secondary dark:text-dark-secondary">1M Tokens</span>
+                    </div>
+                    <h3 class="text-lg font-medium text-light-primary dark:text-dark-primary mb-2">Gemini Flash /
+                        Flash-Lite</h3>
+                    <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed mb-4">
+                        Máxima velocidad y eficiencia en costos. Diseñado para tareas en tiempo real, extracción rápida
+                        de datos en streaming y asistentes interactivos de atención inmediata.
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-light-border dark:border-dark-border text-xs text-light-secondary dark:text-dark-secondary">
+                    <span class="font-medium text-light-primary dark:text-dark-primary">Caso ideal:</span> Chatbots,
+                    clasificación masiva y respuestas en submilisegundos.
+                </div>
+            </div>
+
+            <!-- Modelo 2: Pro -->
+            <div class="p-6 rounded-card bg-light-surface dark:bg-dark-surface border border-gemini-blue/30 dark:border-gemini-blue/40 shadow-card-light dark:shadow-card-dark relative flex flex-col justify-between">
+                <div class="absolute -top-3 right-6 px-2.5 py-0.5 rounded-pill bg-gemini-blue text-white text-[10px] font-medium tracking-wide">
+                    ESTÁNDAR LABORAL
+                </div>
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-pill text-[11px] font-medium bg-gemini-blue/10 text-gemini-blue">
+                Razonamiento
+              </span>
+                        <span class="text-xs text-light-secondary dark:text-dark-secondary">2M Tokens</span>
+                    </div>
+                    <h3 class="text-lg font-medium text-light-primary dark:text-dark-primary mb-2">Gemini Pro</h3>
+                    <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed mb-4">
+                        Rendimiento balanceado de escala empresarial. Especialista en razonamiento complejo sobre
+                        ventanas de contexto extensas (libros enteros o repositorios de código).
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-light-border dark:border-dark-border text-xs text-light-secondary dark:text-dark-secondary">
+                    <span class="font-medium text-light-primary dark:text-dark-primary">Caso ideal:</span> Análisis de
+                    contratos, auditoría documental y generación de código senior.
+                </div>
+            </div>
+
+            <!-- Modelo 3: Ultra -->
+            <div class="p-6 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card-light dark:shadow-card-dark flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-pill text-[11px] font-medium bg-gemini-yellow/15 text-[#D9A100] dark:text-gemini-yellow">
+                Cálculo Intensivo
+              </span>
+                        <span class="text-xs text-light-secondary dark:text-dark-secondary">Máxima Capacidad</span>
+                    </div>
+                    <h3 class="text-lg font-medium text-light-primary dark:text-dark-primary mb-2">Gemini Ultra</h3>
+                    <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed mb-4">
+                        Capacidad de cómputo superior para resolución de problemas científicos, razonamiento multimodal
+                        profundo y flujos algorítmicos altamente sofisticados.
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-light-border dark:border-dark-border text-xs text-light-secondary dark:text-dark-secondary">
+                    <span class="font-medium text-light-primary dark:text-dark-primary">Caso ideal:</span> I+D avanzado,
+                    simulaciones lógicas y síntesis multidominio.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bloque de Descarga de Fichas Técnicas -->
+        <div class="border-t border-light-border dark:border-dark-border pt-12">
+            <h3 class="text-lg font-medium text-center text-light-primary dark:text-dark-primary mb-8">
+                Documentación de Arquitectura y Benchmarks
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div class="p-5 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border flex items-center justify-between gap-4 group">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-gemini-blue/10 text-gemini-blue flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-light-primary dark:text-dark-primary group-hover:text-gemini-blue transition-colors">
+                                Ficha Técnica: Gemini 1.5 Pro vs Flash.pdf
+                            </h4>
+                            <div class="flex items-center gap-2 mt-0.5 text-xs text-light-secondary dark:text-dark-secondary">
+                                <span>Benchmarks Oficiales</span>
+                                <span>•</span>
+                                <span class="px-1.5 py-0.5 rounded bg-black/[0.04] dark:bg-white/[0.06] text-[11px]">3.2 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="triggerDownload('Ficha-Tecnica-Gemini-1.5-Pro-vs-Flash.pdf', '3.2 MB')"
+                            class="px-3.5 py-2 rounded-pill bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-xs font-medium hover:border-gemini-blue text-light-primary dark:text-dark-primary flex items-center gap-1.5 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Descargar</span>
+                    </button>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border flex items-center justify-between gap-4 group">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-gemini-blue/10 text-gemini-blue flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-light-primary dark:text-dark-primary group-hover:text-gemini-blue transition-colors">
+                                Guía de Arquitectura Multimodal.pdf
+                            </h4>
+                            <div class="flex items-center gap-2 mt-0.5 text-xs text-light-secondary dark:text-dark-secondary">
+                                <span>Procesamiento de Video y Audio</span>
+                                <span>•</span>
+                                <span class="px-1.5 py-0.5 rounded bg-black/[0.04] dark:bg-white/[0.06] text-[11px]">4.1 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="triggerDownload('Guia-de-Arquitectura-Multimodal.pdf', '4.1 MB')"
+                            class="px-3.5 py-2 rounded-pill bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-xs font-medium hover:border-gemini-blue text-light-primary dark:text-dark-primary flex items-center gap-1.5 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Descargar</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ========================================================
+         6. SECCIÓN: GEMINI NOTEBOOKLM (INVESTIGACIÓN Y PRODUCTIVIDAD)
+    ======================================================== -->
+    <section id="notebooklm" class="py-24 px-6 border-t border-light-border dark:border-dark-border max-w-5xl mx-auto">
+
+        <!-- Encabezado con SVG NotebookLM Exacto -->
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <div class="inline-flex items-center justify-center p-3.5 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-sm mb-4">
+                <svg class="w-9 h-9 fill-current text-light-primary dark:text-dark-primary" role="img"
+                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <title>NotebookLM</title>
+                    <path d="M11.999 3.201C5.372 3.201 0 8.528 0 15.101V20.8h2.212v-.568c0-2.666 2.178-4.827 4.866-4.827 2.688 0 4.866 2.16 4.866 4.827v.568h2.212v-.568c0-3.877-3.17-7.019-7.078-7.019A7.075 7.075 0 0 0 2.992 14.5a7.355 7.355 0 0 1 6.568-4.016c4.057 0 7.347 3.264 7.347 7.287V20.8h2.212V17.77c0-5.235-4.28-9.481-9.56-9.481a9.563 9.563 0 0 0-6.217 2.28A9.795 9.795 0 0 1 12 5.393c5.406 0 9.788 4.346 9.788 9.707V20.8H24V15.1c-.001-6.573-5.373-11.9-12.001-11.9Z"/>
+                </svg>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-normal tracking-tight text-light-primary dark:text-dark-primary mb-3">
+                Gemini NotebookLM: Investigación &amp; Productividad
+            </h2>
+            <p class="text-sm sm:text-base text-light-secondary dark:text-dark-secondary font-normal leading-relaxed">
+                NotebookLM transforma tus documentos corporativos en un cerebro analítico personalizado. Respaldado por
+                el modelo Gemini 1.5, garantiza anclaje estricto en tus fuentes (Grounding) sin inventar información, y
+                crea <em>Audio Overviews</em> automatizados en formato podcast para asimilar conocimiento a gran
+                velocidad.
+            </p>
+        </div>
+
+        <!-- Tres Pilares Clave de NotebookLM -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <div class="p-6 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
+                <div class="w-8 h-8 rounded-full bg-gemini-blue/10 text-gemini-blue flex items-center justify-center text-sm font-medium mb-3">
+                    1
+                </div>
+                <h4 class="text-base font-medium mb-2 text-light-primary dark:text-dark-primary">Grounding Estricto</h4>
+                <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed">
+                    Cada afirmación incluye citas directas con número de página o fragmento extraído exactamente de tus
+                    PDFs, Google Docs o enlaces cargados.
+                </p>
+            </div>
+
+            <div class="p-6 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
+                <div class="w-8 h-8 rounded-full bg-gemini-yellow/15 text-gemini-yellow flex items-center justify-center text-sm font-medium mb-3">
+                    2
+                </div>
+                <h4 class="text-base font-medium mb-2 text-light-primary dark:text-dark-primary">Audio Overviews</h4>
+                <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed">
+                    Convierte material denso de cientos de páginas en una conversación hablada dinámica entre dos
+                    anfitriones de IA, ideal para asimilar informes en tránsito.
+                </p>
+            </div>
+
+            <div class="p-6 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
+                <div class="w-8 h-8 rounded-full bg-gemini-green/10 text-gemini-green flex items-center justify-center text-sm font-medium mb-3">
+                    3
+                </div>
+                <h4 class="text-base font-medium mb-2 text-light-primary dark:text-dark-primary">Notas
+                    Interconectadas</h4>
+                <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed">
+                    Organiza resúmenes temáticos, guías de estudio, borradores de informes y preguntas frecuentes
+                    estructuradas con un solo clic.
+                </p>
+            </div>
+        </div>
+
+        <!-- Recurso PDF Exclusivo NotebookLM -->
+        <div class="mb-16">
+            <div class="p-5 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-gemini-red/10 text-gemini-red flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-light-primary dark:text-dark-primary">
+                            Manual de Síntesis de Documentos con NotebookLM.pdf
+                        </h4>
+                        <p class="text-xs text-light-secondary dark:text-dark-secondary mt-0.5">
+                            Metodología paso a paso para procesar informes de investigación y crear audios ejecutivos •
+                            2.9 MB
+                        </p>
+                    </div>
+                </div>
+                <button onclick="triggerDownload('Manual-de-Sintesis-de-Documentos-con-NotebookLM.pdf', '2.9 MB')"
+                        class="px-4 py-2 rounded-pill bg-light-primary text-light-surface dark:bg-dark-primary dark:text-dark-bg text-xs font-medium hover:opacity-90 flex items-center gap-2 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    <span>Descargar Manual</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tarjetas de Videos de YouTube / Previews Interactivas -->
+        <div>
+            <h3 class="text-lg font-medium text-center text-light-primary dark:text-dark-primary mb-8">
+                Talleres y Demostraciones en Video
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Video 1 -->
+                <div class="rounded-card overflow-hidden bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card-light dark:shadow-card-dark flex flex-col">
+                    <!-- Thumbnail Simulado Minimalista con Badge Play -->
+                    <div class="relative aspect-video bg-gradient-to-br from-neutral-900 to-neutral-800 flex items-center justify-center overflow-hidden group cursor-pointer"
+                         onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'NotebookLM a Fondo: Audio Overviews y Fuentes de Drive')">
+                        <!-- Glow de fondo -->
+                        <div class="absolute inset-0 bg-gemini-blue/10 opacity-40 group-hover:opacity-70 transition-opacity"></div>
+
+                        <!-- Gráfica representativa en SVG -->
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:scale-105 transition-transform duration-500">
+                            <svg class="w-32 h-32 fill-white" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                            </svg>
+                        </div>
+
+                        <!-- Botón Play Centrado -->
+                        <div class="w-14 h-14 rounded-full bg-white/90 text-neutral-900 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform z-10">
+                            <svg class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+
+                        <!-- Badge Duración -->
+                        <div class="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/80 text-[11px] text-white font-medium">
+                            14:28
+                        </div>
+                    </div>
+
+                    <!-- Contenido Video -->
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[11px] font-medium text-gemini-blue uppercase tracking-wider">Tutorial Práctico</span>
+                            <h4 class="text-base font-medium text-light-primary dark:text-dark-primary mt-1 mb-2">
+                                NotebookLM a Fondo: Audio Overviews y Fuentes de Drive
+                            </h4>
+                            <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed">
+                                Aprende a conectar múltiples documentos corporativos, solicitar síntesis comparativas y
+                                exportar resúmenes de audio en alta fidelidad.
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-light-border dark:border-dark-border flex items-center justify-between">
+                            <span class="text-xs text-light-secondary dark:text-dark-secondary">Google Workspace Labs</span>
+                            <button onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'NotebookLM a Fondo: Audio Overviews y Fuentes de Drive')"
+                                    class="text-xs font-medium text-gemini-blue hover:underline flex items-center gap-1">
+                                <span>Ver en YouTube</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 2 -->
+                <div class="rounded-card overflow-hidden bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card-light dark:shadow-card-dark flex flex-col">
+                    <!-- Thumbnail Simulado Minimalista con Badge Play -->
+                    <div class="relative aspect-video bg-gradient-to-br from-neutral-900 to-neutral-800 flex items-center justify-center overflow-hidden group cursor-pointer"
+                         onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'Gemini en el Trabajo: Automatización de Flujos en Docs y Gmail')">
+                        <div class="absolute inset-0 bg-gemini-green/10 opacity-40 group-hover:opacity-70 transition-opacity"></div>
+
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:scale-105 transition-transform duration-500">
+                            <svg class="w-32 h-32 fill-white" viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                        </div>
+
+                        <div class="w-14 h-14 rounded-full bg-white/90 text-neutral-900 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform z-10">
+                            <svg class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+
+                        <div class="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/80 text-[11px] text-white font-medium">
+                            19:40
+                        </div>
+                    </div>
+
+                    <!-- Contenido Video -->
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[11px] font-medium text-gemini-green uppercase tracking-wider">Flujos Laborales</span>
+                            <h4 class="text-base font-medium text-light-primary dark:text-dark-primary mt-1 mb-2">
+                                Gemini en el Trabajo: Automatización de Flujos en Docs y Gmail
+                            </h4>
+                            <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary leading-relaxed">
+                                Domina las técnicas profesionales de prompt engineering para redactar propuestas
+                                comerciales, consolidar minutas de reunión y agilizar el día a día.
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-light-border dark:border-dark-border flex items-center justify-between">
+                            <span class="text-xs text-light-secondary dark:text-dark-secondary">Casos de Uso Reales</span>
+                            <button onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'Gemini en el Trabajo: Automatización de Flujos en Docs y Gmail')"
+                                    class="text-xs font-medium text-gemini-blue hover:underline flex items-center gap-1">
+                                <span>Ver en YouTube</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ========================================================
+         7. FOOTER PROFESIONAL (INSTRUCTOR FELIPE CUEVAS)
+    ======================================================== -->
+    <footer id="instructor"
+            class="border-t border-light-border dark:border-dark-border bg-light-surface/60 dark:bg-dark-surface/60 pt-20 pb-12 px-6">
+        <div class="max-w-4xl mx-auto">
+
+            <!-- Tarjeta Sobria del Instructor -->
+            <div class="p-8 rounded-card bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-card-light dark:shadow-card-dark mb-16 flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
+
+                <!-- Avatar con Iniciales y Anillo Sutil Multicolor -->
+                <div class="relative flex-shrink-0">
+                    <div class="w-20 h-20 rounded-full p-[2px] bg-gradient-to-tr from-gemini-blue via-gemini-yellow to-gemini-red">
+                        <div class="w-full h-full rounded-full bg-light-surface dark:bg-dark-surface flex items-center justify-center font-medium text-xl text-light-primary dark:text-dark-primary tracking-wider">
+                            FC
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información y Bio -->
+                <div class="flex-1">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl font-medium text-light-primary dark:text-dark-primary">
+                                Felipe Cuevas
+                            </h3>
+                            <p class="text-xs text-gemini-blue font-medium mt-0.5">
+                                Consultor &amp; Facilitador de IA en Entornos Profesionales
+                            </p>
+                        </div>
+
+                        <!-- Botones Sociales Minimalistas -->
+                        <div class="flex items-center justify-center sm:justify-end gap-2.5 mt-2 sm:mt-0">
+
+                            <!-- LinkedIn -->
+                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+                               aria-label="LinkedIn de Felipe Cuevas"
+                               class="w-9 h-9 rounded-pill flex items-center justify-center bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-light-secondary dark:text-dark-secondary hover:text-gemini-blue hover:border-gemini-blue/40 transition-colors">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                                </svg>
+                            </a>
+
+                            <!-- Sitio Web Oficial -->
+                            <a href="https://google.com" target="_blank" rel="noopener noreferrer"
+                               aria-label="Sitio web de Felipe Cuevas"
+                               class="w-9 h-9 rounded-pill flex items-center justify-center bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-light-secondary dark:text-dark-secondary hover:text-gemini-blue hover:border-gemini-blue/40 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                          d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                                </svg>
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <p class="text-xs sm:text-sm text-light-secondary dark:text-dark-secondary font-normal leading-relaxed">
+                        Especialista en la integración estratégica de inteligencia artificial aplicada en
+                        organizaciones. Diseña e implementa metodologías de optimización operativa, adopción de Google
+                        Workspace con Gemini y formación ejecutiva para equipos orientados al impacto.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Barra Inferior de Copyright y Filosofía Gemini -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-light-secondary dark:text-dark-secondary border-t border-light-border dark:border-dark-border pt-8 text-center sm:text-left">
+                <p>© 2026 Ecosistema Gemini &amp; Google Suite. Todos los derechos reservados.</p>
+                <p class="flex items-center gap-1.5 justify-center">
+                    <span>Inspirado en la filosofía visual de</span>
+                    <span class="font-medium text-light-primary dark:text-dark-primary">Google Gemini UI</span>
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+</main>
+
+<!-- ========================================================
+     MODAL DE VIDEO INTERACTIVO
+======================================================== -->
+<div id="video-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl">
+        <div class="p-4 flex items-center justify-between border-b border-light-border dark:border-dark-border">
+            <h4 id="modal-video-title"
+                class="text-sm font-medium text-light-primary dark:text-dark-primary truncate pr-4">Video</h4>
+            <button onclick="closeVideoModal()"
+                    class="w-8 h-8 rounded-pill flex items-center justify-center text-light-secondary dark:text-dark-secondary hover:text-light-primary dark:hover:text-dark-primary hover:bg-black/[0.05] dark:hover:bg-white/[0.05]">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="aspect-video w-full bg-black">
+            <iframe id="video-iframe" class="w-full h-full" src="" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================
+     JAVASCRIPT VANILLA (ES6+) - INTERACCIONES COMPLETAS
+======================================================== -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // 1. SISTEMA DE TEMA CLARO / OSCURO (CON PERSISTENCIA)
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const htmlEl = document.documentElement;
+
+        function updateThemeIcons(isDark) {
+            if (isDark) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('dark');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        // Comprobar preferencia guardada o preferencia del sistema operativo
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            htmlEl.classList.add('dark');
+            updateThemeIcons(true);
+        } else {
+            htmlEl.classList.remove('dark');
+            updateThemeIcons(false);
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = htmlEl.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcons(isDark);
+        });
+
+        // 2. MENÚ MÓVIL TOGGLE
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 3. SELECTOR DE MODELO EN EL PROMPT (FLASH / PRO / ULTRA)
+        const modelDropdownBtn = document.getElementById('model-dropdown-btn');
+        const modelDropdownMenu = document.getElementById('model-dropdown-menu');
+        const currentModelLabel = document.getElementById('current-model-label');
+        const responseModelTag = document.getElementById('response-model-tag');
+
+        modelDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            modelDropdownMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.model-opt').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                const selectedModel = opt.getAttribute('data-model');
+                currentModelLabel.textContent = selectedModel;
+                responseModelTag.textContent = selectedModel;
+                modelDropdownMenu.classList.add('hidden');
+            });
+        });
+
+        document.addEventListener('click', () => {
+            modelDropdownMenu.classList.add('hidden');
+        });
+
+        // 4. INTERACCIÓN CON EL PROMPT Y SIMULACIÓN INTELIGENTE DE RESPUESTAS
+        const promptInput = document.getElementById('prompt-input');
+        const promptResponse = document.getElementById('prompt-response');
+        const responseText = document.getElementById('response-text');
+
+        const simulatedKnowledge = {
+            'gmail': 'En Gmail, utiliza prompts específicos como: "Sintetiza este hilo en 3 viñetas ejecutivas con próximos pasos y redacta un borrador cordial de agradecimiento confirmando la entrega del viernes".',
+            'audio': 'En NotebookLM, abre un cuaderno, añade al menos un documento de texto o PDF y en el panel "Guía del cuaderno" pulsa "Generar" bajo Audio Overview para obtener la conversación explicativa.',
+            'flash': 'Gemini Flash ofrece una latencia de milisegundos con ventana de contexto de hasta 1 millón de tokens, optimizado para alto volumen de peticiones y respuestas instantáneas.',
+            'default': 'Gemini se encuentra listo para asistirte en Google Docs, Sheets, Drive y Meet. Ingresa tus requerimientos para estructurar flujos laborales eficientes.'
+        };
+
+        function handlePromptQuery(query) {
+            if (!query.trim()) return;
+
+            promptResponse.classList.remove('hidden');
+            responseText.innerHTML = '<span class="opacity-50">Generando respuesta con el modelo...</span>';
+
+            setTimeout(() => {
+                const q = query.toLowerCase();
+                let reply = simulatedKnowledge.default;
+
+                if (q.includes('gmail') || q.includes('correo') || q.includes('resumir')) {
+                    reply = simulatedKnowledge.gmail;
+                } else if (q.includes('audio') || q.includes('notebooklm') || q.includes('podcast')) {
+                    reply = simulatedKnowledge.audio;
+                } else if (q.includes('flash') || q.includes('pro') || q.includes('diferencia') || q.includes('modelo')) {
+                    reply = simulatedKnowledge.flash;
+                } else {
+                    reply = `Procesando tarea "${query}": Se recomienda estructurar la instrucción dividiendo el objetivo, el contexto empresarial y el formato de salida esperado (tabla, viñetas o código).`;
+                }
+
+                responseText.textContent = reply;
+            }, 350);
+        }
+
+        promptInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                handlePromptQuery(promptInput.value);
+            }
+        });
+
+        // Chips de sugerencia rápida
+        document.querySelectorAll('.prompt-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const text = chip.textContent.trim();
+                promptInput.value = text;
+                handlePromptQuery(text);
+            });
+        });
+
+        // 5. SIMULACIÓN DE DESCARGAS DE ARCHIVOS PDF CON FEEDBACK VISUAL
+        window.triggerDownload = function (fileName, size) {
+            // Crear Toast flotante
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'pointer-events-auto flex items-center gap-3 p-4 rounded-2xl bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border shadow-xl text-xs text-light-primary dark:text-dark-primary animate-bounce';
+            toast.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-gemini-green/10 text-gemini-green flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <div>
+            <p class="font-medium">Iniciando descarga simulada</p>
+            <p class="text-[11px] text-light-secondary dark:text-dark-secondary">${fileName} (${size})</p>
+          </div>
+        `;
+            container.appendChild(toast);
+
+            // Crear archivo de texto simulado en memoria y descargarlo como PDF ficticio
+            setTimeout(() => {
+                const blob = new Blob([
+                    `RECURSO DE CAPACITACIÓN OFICIAL\n\nArchivo: ${fileName}\nTamaño: ${size}\nInstructor: Felipe Cuevas\nEcosistema: Google Gemini & Workspace\n\nEste documento certifica las pautas y guías del entorno de IA.`
+                ], {type: 'application/pdf'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 500);
+
+            // Remover toast tras 4 segundos
+            setTimeout(() => {
+                toast.classList.remove('animate-bounce');
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 300ms ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        };
+
+        // 6. GESTIÓN DEL MODAL DE VIDEO
+        window.openVideoModal = function (url, title) {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('video-iframe');
+            const titleEl = document.getElementById('modal-video-title');
+
+            titleEl.textContent = title;
+            iframe.src = url;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeVideoModal = function () {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('video-iframe');
+            iframe.src = '';
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        document.getElementById('video-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'video-modal') {
+                closeVideoModal();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
